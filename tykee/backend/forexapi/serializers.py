@@ -39,10 +39,10 @@ class PositionRawSerializer(serializers.Serializer):
 class StrategiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Strategies
-        fields = ['strategy_id', 'name']
+        fields = ["strategy_id", "name"]
 
 
 class SymbolsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Symbols
-        fields = ['name', 'base_currency', 'quote_currency', 'digits']
+        fields = ["name", "base_currency", "quote_currency", "digits"]

@@ -1,20 +1,12 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
-
 from django.db import models
 
 
 class Backtests(models.Model):
     id = models.BigAutoField(primary_key=True)
     backtest_id = models.BigIntegerField(unique=True)
-    strategy = models.ForeignKey('Strategies', models.DO_NOTHING, to_field='strategy_id')
-    symbol = models.ForeignKey('Symbols', models.DO_NOTHING, to_field='symbol_id')
-    period = models.ForeignKey('Periods', models.DO_NOTHING, to_field='period_id')
+    strategy = models.ForeignKey("Strategies", models.DO_NOTHING, to_field="strategy_id")
+    symbol = models.ForeignKey("Symbols", models.DO_NOTHING, to_field="symbol_id")
+    period = models.ForeignKey("Periods", models.DO_NOTHING, to_field="period_id")
     start_balance = models.FloatField()
     account_currency = models.TextField()
     date_from = models.BigIntegerField()
@@ -30,15 +22,19 @@ class Backtests(models.Model):
     total_trades = models.IntegerField()
     win_rate = models.FloatField()
 
+    @classmethod
+    def new_backtest_id(cls):
+        return cls.objects.last().backtest_id + 1 if cls.objects.last() else 1
+
     class Meta:
         managed = False
-        db_table = 'backtests'
+        db_table = "backtests"
 
 
 class Bars(models.Model):
     id = models.BigAutoField(primary_key=True)
-    symbol = models.ForeignKey('Symbols', models.DO_NOTHING, to_field='symbol_id')
-    period = models.ForeignKey('Periods', models.DO_NOTHING, to_field='period_id')
+    symbol = models.ForeignKey("Symbols", models.DO_NOTHING, to_field="symbol_id")
+    period = models.ForeignKey("Periods", models.DO_NOTHING, to_field="period_id")
     start_dt = models.DateTimeField()
     end_dt = models.DateTimeField()
     open = models.IntegerField()
@@ -52,8 +48,8 @@ class Bars(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'bars'
-        unique_together = (('symbol', 'start_dt', 'end_dt'),)
+        db_table = "bars"
+        unique_together = (("symbol", "start_dt", "end_dt"),)
 
 
 class BreakevenFlags(models.Model):
@@ -63,7 +59,7 @@ class BreakevenFlags(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'breakeven_flags'
+        db_table = "breakeven_flags"
 
 
 class CloseTypes(models.Model):
@@ -73,7 +69,7 @@ class CloseTypes(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'close_types'
+        db_table = "close_types"
 
 
 class Periods(models.Model):
@@ -88,7 +84,7 @@ class Periods(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'periods'
+        db_table = "periods"
 
 
 class PositionTypes(models.Model):
@@ -98,7 +94,7 @@ class PositionTypes(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'position_types'
+        db_table = "position_types"
 
 
 class Positions(models.Model):
@@ -116,14 +112,14 @@ class Positions(models.Model):
     commission = models.FloatField()
     swap = models.FloatField()
     balance = models.FloatField()
-    backtest = models.ForeignKey(Backtests, models.DO_NOTHING, to_field='backtest_id')
+    backtest = models.ForeignKey(Backtests, models.DO_NOTHING, to_field="backtest_id")
     position_type = models.ForeignKey(PositionTypes, models.DO_NOTHING)
     breakeven_flag = models.ForeignKey(BreakevenFlags, models.DO_NOTHING)
     close_type = models.ForeignKey(CloseTypes, models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'positions'
+        db_table = "positions"
 
 
 class Strategies(models.Model):
@@ -134,22 +130,13 @@ class Strategies(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def new_strategy_id(cls):
+        return cls.objects.last().strategy_id + 1 if cls.objects.last() else 1
+
     class Meta:
         managed = False
-        db_table = 'strategies'
-
-    def find_by_name(self, name):
-        return self.objects.get(name=name)
-
-    # def get_or_create(self, name):
-    #     return self.objects.get_or_create(name=name)
-
-
-#     def get_or_create(self, name):
-#         strategy, created = Strategies.objects.get_or_create(name=name)
-#         return strategy
-#
-# print(Strategies.objects.get_or_create(name='test'))
+        db_table = "strategies"
 
 
 class Symbols(models.Model):
@@ -162,12 +149,12 @@ class Symbols(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'symbols'
+        db_table = "symbols"
 
 
 class Ticks(models.Model):
     id = models.BigAutoField(primary_key=True)
-    symbol = models.ForeignKey(Symbols, models.DO_NOTHING, to_field='symbol_id')
+    symbol = models.ForeignKey(Symbols, models.DO_NOTHING, to_field="symbol_id")
     ts_utc = models.BigIntegerField()
     bid = models.BigIntegerField()
     ask = models.BigIntegerField()
@@ -175,4 +162,4 @@ class Ticks(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'ticks'
+        db_table = "ticks"

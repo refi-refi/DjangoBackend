@@ -18,27 +18,18 @@ In my experience the best way to work with backend is to first write schema and 
 psql -U postgres -d postgres -a -f schema.sql
 ```
 
-This will create a database called `tykee` and a user called `tykee` with password `tykee`. You can change this in the `postgres/schema.sql` file.
+_Script `schema.sql` can be found under `tykee\postgres`._
 
-Afterwards run the following command to insert initial data into the database:
+This will create a new Postgres database with following credentials:
+* Database name: `tykee`
+* Username: `tykee`
+* Password: `tykee`
+
+After the database is created, set up a new virtual environment and install all the dependencies:
 
 ```bash
-psql -U tykee -d tykee -a -f data.sql
+pip install -r requirements.txt
 ```
-
-- Clone the repository
-- Create a virtual environment
-- Install the requirements
-- Create a .env file in the root directory and add the following variables
-
-```
-SECRET_KEY=your_secret_key
-DEBUG=True
-ALLOWED_HOSTS=*
-DATABASE_URL=postgres://user:password@localhost:5432/db_name
-```
-
-
 
 ## Business Logic
 
@@ -72,13 +63,13 @@ The following is a brief description of each step:
     * Total Trades
     * Win Rate
 
-4. The Django REST API saves the backtest results.
-5. The Django REST API saves the positions.
+4. Save the new backtest.
+5. Pass backtest object to positions and save positions.
 
 ### Main Entity Relationship Diagram
 
 ```mermaid
     erDiagram
-        STRATEGY ||--o{ BACKTEST : has
-        BACKTEST ||--o{ POSITION : has
+        STRATEGIES ||--o{ BACKTESTS : has
+        BACKTESTS ||--o{ POSITIONS : has
 ```

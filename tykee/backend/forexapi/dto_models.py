@@ -19,19 +19,24 @@ def calculate_backtest_stats(positions: Iterable) -> Dict[str, Union[float, int]
         Statistics of the backtest.
     """
     positions = pd.DataFrame(positions)
-    start_balance = positions['balance'].iloc[0] + positions['net_profit'].iloc[0]
+    start_balance = positions["balance"].iloc[0] + positions["net_profit"].iloc[0]
     profit = round((positions.balance.iloc[-1] / start_balance - 1) * 100, 2)
     profit_factor = round(
         positions[positions.net_profit > 0].net_profit.sum()
         / abs(positions[positions.net_profit < 0].net_profit.sum()),
-        2
+        2,
     )
     dd = max_drawdown(positions.balance)
     total_trades = len(positions)
     wr = round(len(positions[positions.gross_profit > 0]) / total_trades * 100, 2)
 
-    return {'profit': profit, 'profit_factor': profit_factor, 'drawdown': dd, 'total_trades': total_trades,
-            'win_rate': wr}
+    return {
+        "profit": profit,
+        "profit_factor": profit_factor,
+        "drawdown": dd,
+        "total_trades": total_trades,
+        "win_rate": wr,
+    }
 
 
 def max_drawdown(balances: pd.Series):
@@ -67,6 +72,7 @@ def max_drawdown(balances: pd.Series):
 def max_min_peaks(values: pd.Series, lookahead: int = 3):
     """
     Finds the maximum and minimum peaks and troughs of a given series of values.
+
     Parameters
     ----------
     values
